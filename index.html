@@ -1,0 +1,534 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Bracket Creation</title>
+</head>
+<body>
+    <header>
+        <h1>Soap Box Derby Bracket Creation</h1>
+    </header>
+
+    <div class="main-container">
+
+        <div class="division-container">
+            <div class="division-header">
+                <span class="header-text">Stock</span>
+            </div>
+            <div class="list-container">
+                <ol class="people" data-div-1></ol>
+            </div>
+            <div class="division-add-person">
+                <form action="" data-new-person-form-1>
+                    <button class="add-player-button">+</button>
+                    <input type="text"
+                           class="new-person"
+                           placeholder="new name"
+                           aria-label="new name"
+                           data-new-person-input-1 />
+                </form>
+                <div class="button-spacer"></div>
+                <button class="delete-player-button" data-delete-person-button-1>-</button>
+            </div>
+            <div class="division-footer">
+                <button class="bracket-button" onclick="create_bracket(1)">Create</button>
+                <button class="bracket-button" onclick="load_bracket(1)">Load</button>
+            </div>
+        </div>
+
+        <div class="division-container-spacer"></div>
+
+        <div class="division-container">
+            <div class="division-header">
+                <span class="header-text">Super Stock</span>
+            </div>
+            <div class="list-container">
+                <ol class="people" data-div-2></ol>
+            </div>
+            <div class="division-add-person">
+                <form action="" data-new-person-form-2>
+                    <button class="add-player-button">+</button>
+                    <input type="text"
+                           class="new-person"
+                           placeholder="new name"
+                           aria-label="new name"
+                           data-new-person-input-2 />
+                </form>
+                <div class="button-spacer"></div>
+                <button class="delete-player-button" data-delete-person-button-2>-</button>
+            </div>
+            <div class="division-footer">
+                <button class="bracket-button" onclick="create_bracket(2)">Create</button>
+                <button class="bracket-button" onclick="load_bracket(2)">Load</button>
+            </div>
+        </div>
+
+        <div class="division-container-spacer"></div>
+
+        <div class="division-container">
+            <div class="division-header">
+                <span class="header-text">Masters</span>
+            </div>
+            <div class="list-container">
+                <ol class="people" data-div-3></ol>
+            </div>
+            <div class="division-add-person">
+                <form action="" data-new-person-form-3>
+                    <button class="add-player-button">+</button>
+                    <input type="text"
+                           class="new-person"
+                           placeholder="new name"
+                           aria-label="new name"
+                           data-new-person-input-3 />
+                </form>
+                <div class="button-spacer"></div>
+                <button class="delete-player-button" data-delete-person-button-3>-</button>
+            </div>
+            <div class="division-footer">
+                <button class="bracket-button" onclick="create_bracket(3)">Create</button>
+                <button class="bracket-button" onclick="load_bracket(3)">Load</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+</html>
+
+
+<script>
+    // Stock = 1
+    // Super Stock = 2
+    // Masters = 3
+
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    // Stock = 1
+    const listContainer1 = document.querySelector('[data-div-1]');
+    const newPersonForm1 = document.querySelector('[data-new-person-form-1]');
+    const newPersonInput1 = document.querySelector('[data-new-person-input-1]');
+    const deletePersonButton1 = document.querySelector('[data-delete-person-button-1]');
+
+    const LOCAL_STORAGE_PERSON_KEY_1 = 'people1.list'; // This is where 'people' gets saved.
+    const LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_1 = 'people1.selectedPersonId'; // Can I get rid of this?
+    let people1 = JSON.parse(localStorage.getItem(LOCAL_STORAGE_PERSON_KEY_1)) || [];
+    let selectedPersonId1 = localStorage.getItem(LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_1);
+
+    var fullNames1 = JSON.parse(localStorage.getItem('stock.fullNames')) || [];
+    //fullNames1 = [];
+
+    /********************************************************************************************/
+    // Event Listeners
+    listContainer1.addEventListener('click', e => {
+        if (e.target.tagName.toLowerCase() === 'li') {
+            selectedPersonId1 = e.target.dataset.listId;
+            save(1);
+            render1(listContainer1);
+        }
+    })
+
+    deletePersonButton1.addEventListener('click', e => {
+        fullNames1.splice(fullNames1.indexOf(people1.find(x => x.id === selectedPersonId1).name), 1);
+        people1 = people1.filter(person => person.id != selectedPersonId1);
+        selectedPersonId1 = null;
+        save(1);
+        render1(listContainer1);
+    })
+
+    newPersonForm1.addEventListener("submit", e => {
+        e.preventDefault();
+        const personName = newPersonInput1.value;
+        if (personName == null || personName == "") return;
+        const person = createPerson(personName);
+        newPersonInput1.value = null;
+        people1.push(person);
+        fullNames1.push(person.name);
+        save(1);
+        render1(listContainer1);
+    })
+    /********************************************************************************************/
+
+    function render1(listOfData) {
+        clearElement(listOfData);
+        people1.forEach(person => {
+            const listElement = document.createElement('li');
+            listElement.dataset.listId = person.id;
+            listElement.classList.add("person");
+            listElement.innerText = person.name;
+            if (person.id == selectedPersonId1) {
+                listElement.classList.add("active-person");
+            }
+            listOfData.appendChild(listElement);
+        });
+    }
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    // Super Stock = 2
+
+    const listContainer2 = document.querySelector('[data-div-2]');
+    const newPersonForm2 = document.querySelector('[data-new-person-form-2]');
+    const newPersonInput2 = document.querySelector('[data-new-person-input-2]');
+    const deletePersonButton2 = document.querySelector('[data-delete-person-button-2]');
+
+    const LOCAL_STORAGE_PERSON_KEY_2 = 'people2.list'; // This is where 'people' gets saved.
+    const LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_2 = 'people2.selectedPersonId'; // Can I get rid of this?
+    let people2 = JSON.parse(localStorage.getItem(LOCAL_STORAGE_PERSON_KEY_2)) || [];
+    let selectedPersonId2 = localStorage.getItem(LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_2);
+
+    var fullNames2 = JSON.parse(localStorage.getItem('superStock.fullNames')) || [];
+    //fullNames2 = [];
+
+
+    // Event Listeners
+    listContainer2.addEventListener('click', e => {
+        if (e.target.tagName.toLowerCase() === 'li') {
+            selectedPersonId2 = e.target.dataset.listId;
+            save(2);
+            render2(listContainer2);
+        }
+    })
+
+    deletePersonButton2.addEventListener('click', e => {
+        fullNames2.splice(fullNames2.indexOf(people2.find(x => x.id === selectedPersonId2).name), 1);
+        people2 = people2.filter(person => person.id != selectedPersonId2);
+        selectedPersonId2 = null;
+        save(2);
+        render2(listContainer2);
+    })
+
+    newPersonForm2.addEventListener("submit", e => {
+        e.preventDefault();
+        const personName = newPersonInput2.value;
+        if (personName == null || personName == "") return;
+        const person = createPerson(personName);
+        newPersonInput2.value = null;
+        people2.push(person);
+        fullNames2.push(person.name);
+        save(2);
+        render2(listContainer2);
+    })
+    /********************************************************************************************/
+
+    function render2(listOfData) {
+        clearElement(listOfData);
+        people2.forEach(person => {
+            const listElement = document.createElement('li');
+            listElement.dataset.listId = person.id;
+            listElement.classList.add("person");
+            listElement.innerText = person.name;
+            if (person.id == selectedPersonId2) {
+                listElement.classList.add("active-person");
+            }
+            listOfData.appendChild(listElement);
+        });
+    }
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    // Masters = 3
+
+    const listContainer3 = document.querySelector('[data-div-3]');
+    const newPersonForm3 = document.querySelector('[data-new-person-form-3]');
+    const newPersonInput3 = document.querySelector('[data-new-person-input-3]');
+    const deletePersonButton3 = document.querySelector('[data-delete-person-button-3]');
+
+    const LOCAL_STORAGE_PERSON_KEY_3 = 'people3.list'; // This is where 'people' gets saved.
+    const LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_3 = 'people3.selectedPersonId'; // Can I get rid of this?
+    let people3 = JSON.parse(localStorage.getItem(LOCAL_STORAGE_PERSON_KEY_3)) || [];
+    let selectedPersonId3 = localStorage.getItem(LOCAL_STORAGE_SELECTED_PERSON_ID_KEY_3);
+
+    var fullNames3 = JSON.parse(localStorage.getItem('masters.fullNames')) || [];
+    //fullNames3 = [];
+
+    // Event Listeners
+    listContainer3.addEventListener('click', e => {
+        if (e.target.tagName.toLowerCase() === 'li') {
+            selectedPersonId3= e.target.dataset.listId;
+            save(3);
+            render3(listContainer3);
+        }
+    })
+
+    deletePersonButton3.addEventListener('click', e => {
+        fullNames3.splice(fullNames3.indexOf(people3.find(x => x.id === selectedPersonId3).name), 1);
+        people3 = people3.filter(person => person.id != selectedPersonId3);
+        selectedPersonId3 = null;
+        save(3);
+        render3(listContainer3);
+    })
+
+    newPersonForm3.addEventListener("submit", e => {
+        e.preventDefault();
+        const personName = newPersonInput3.value;
+        if (personName == null || personName == "") return;
+        const person = createPerson(personName);
+        newPersonInput3.value = null;
+        people3.push(person);
+        fullNames3.push(person.name);
+        save(3);
+        render3(listContainer3);
+    })
+    /********************************************************************************************/
+
+    function render3(listOfData) {
+        clearElement(listOfData);
+        people3.forEach(person => {
+            const listElement = document.createElement('li');
+            listElement.dataset.listId = person.id;
+            listElement.classList.add("person");
+            listElement.innerText = person.name;
+            if (person.id == selectedPersonId3) {
+                listElement.classList.add("active-person");
+            }
+            listOfData.appendChild(listElement);
+        });
+    }
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+    /********************************************************************************************/
+
+    // Functions Independent of Division
+    function clearElement(element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+
+    function createPerson(name) {
+        return { id: Date.now().toString(), name: name };
+    }
+
+    function save(num) {
+        if (num == 1) {
+            localStorage.setItem(LOCAL_STORAGE_PERSON_KEY_1, JSON.stringify(people1));
+            localStorage.setItem("stock.fullNames", JSON.stringify(fullNames1));
+        }
+        if (num == 2) {
+            localStorage.setItem(LOCAL_STORAGE_PERSON_KEY_2, JSON.stringify(people2));
+            localStorage.setItem("superStock.fullNames", JSON.stringify(fullNames2));
+        }
+        if (num == 3) {
+            localStorage.setItem(LOCAL_STORAGE_PERSON_KEY_3, JSON.stringify(people3));
+            localStorage.setItem("masters.fullNames", JSON.stringify(fullNames3));
+        }
+    }
+
+    function create_bracket(num) {
+
+        var cars = "1";
+
+        if (num == 1) {
+            storageKey = 'stock100';
+            if (people1.length <= 8) {
+                cars = "8";
+            }
+            if (people1.length <= 16 && people1.length > 8) {
+                cars = "16"
+            }
+            if (people1.length <= 32 && people1.length > 16) {
+                cars = "32";
+            }
+        }
+        if (num == 2) {
+            storageKey = 'superStock200';
+            if (people2.length <= 8) {
+                cars = "8";
+            }
+            if (people2.length <= 16 && people2.length > 8) {
+                cars = "16"
+            }
+            if (people2.length <= 32 && people2.length > 16) {
+                cars = "32";
+            }
+        }
+        if (num == 3) {
+            storageKey = 'masters300';
+            if (people3.length <= 8) {
+                cars = "8";
+            }
+            if (people3.length <= 16 && people3.length > 8) {
+                cars = "16"
+            }
+            if (people3.length <= 32 && people3.length > 16) {
+                cars = "32";
+            }
+        }
+        action = "create";
+
+        localStorage.setItem("bracket_storage_key", JSON.stringify(storageKey));
+        localStorage.setItem("action", JSON.stringify(action));
+
+        window.open(cars + "_car_bracket.html");
+    }
+
+    function load_bracket(num) {
+        var cars = "1";
+
+        if (num == 1) {
+            storageKey = 'stock100';
+            if (people1.length <= 8) {
+                cars = "8";
+            }
+            if (people1.length <= 16 && people1.length > 8) {
+                cars = "16"
+            }
+            if (people1.length <= 32 && people1.length > 16) {
+                cars = "32";
+            }
+        }
+        if (num == 2) {
+            storageKey = 'superStock200';
+            if (people2.length <= 8) {
+                cars = "8";
+            }
+            if (people2.length <= 16 && people2.length > 8) {
+                cars = "16"
+            }
+            if (people2.length <= 32 && people2.length > 16) {
+                cars = "32";
+            }
+        }
+        if (num == 3) {
+            storageKey = 'masters300';
+            if (people3.length <= 8) {
+                cars = "8";
+            }
+            if (people3.length <= 16 && people3.length > 8) {
+                cars = "16"
+            }
+            if (people3.length <= 32 && people3.length > 16) {
+                cars = "32";
+            }
+        }
+
+        action = "load";
+
+        localStorage.setItem("bracket_storage_key", JSON.stringify(storageKey));
+        localStorage.setItem("action", JSON.stringify(action));
+
+        window.open(cars + "_car_bracket.html");
+    }
+
+
+    render1(listContainer1);
+    render2(listContainer2);
+    render3(listContainer3);
+
+    console.log(fullNames1);
+    console.log(people1);
+    console.log("******************");
+    console.log(fullNames2);
+    console.log(people2);
+    console.log("******************");
+    console.log(fullNames3);
+    console.log(people3);
+    console.log("******************");
+    console.log("******************");
+    console.log(people1.length);
+   
+</script>
+
+
+
+<style>
+
+    body {
+        padding: 20px;
+        background-color: #f7f4e9;
+        text-decoration-color: #F5F5F5;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: row;
+        margin-left: 100px;
+    }
+
+    .division-container {
+        display: flex;
+        flex-direction: column;
+        border: 2px solid gray;
+        padding: 5px;
+        width: 300px;
+        height: 400px;
+        background-color: #d4ebf2;
+        border-radius: 10px;
+    }
+
+    .division-container-spacer {
+        width: 50px;
+    }
+
+    .division-header {
+        background-color: #72bcd4;
+        border: 2px solid gray;
+        padding: 10px;
+        color: #F5F5F5;
+        text-align: center;
+    }
+
+    .header-text {
+        font-size: 32px;
+    }
+
+    .division-add-person {
+        background-color: #72bcd4;
+        border-left: 2px solid gray;
+        border-right: 2px solid gray;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .list-container {
+        background-color: #F5F5F5;
+        height: 85%;
+        padding: 5px;
+        border-right: 2px solid gray;
+        border-left: 2px solid gray;
+        overflow: scroll;
+    }
+
+    .division-footer {
+        background-color: #72bcd4;
+        border: 2px solid gray;
+        padding: 5px;
+        text-align: center;
+    }
+
+    button {
+        background-color: #2E8BC0;
+        color: #F5F5F5;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background-color: #F5F5F5;
+        color: #2E8BC0;
+    }
+
+    input {
+        border-radius: 5px;
+        background-color: #F5F5F5;
+    }
+
+    .active-person {
+        font-weight: bold;
+    }
+
+    .button-spacer {
+        width: 4px;
+    }
+</style>

@@ -4059,6 +4059,10 @@
     console.log(storageKey);
     const action = JSON.parse(localStorage.getItem('action'));
 
+    const name = JSON.parse(localStorage.getItem('name'));
+    document.getElementById('title').innerHTML = name;
+    document.getElementById('bracket-name').innerHTML = name;
+
     if (storageKey == "stock100") {
         fullNames = JSON.parse(localStorage.getItem('stock.fullNames'));
         ids = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132];

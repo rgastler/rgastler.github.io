@@ -328,6 +328,7 @@
         var cars = "1";
 
         if (num == 1) {
+            name = "Stock (100)";
             storageKey = 'stock100';
             if (people1.length <= 8) {
                 cars = "8";
@@ -340,6 +341,7 @@
             }
         }
         if (num == 2) {
+            name = "Super Stock (200)";
             storageKey = 'superStock200';
             if (people2.length <= 8) {
                 cars = "8";
@@ -352,6 +354,7 @@
             }
         }
         if (num == 3) {
+            name = "Masters (300)";
             storageKey = 'masters300';
             if (people3.length <= 8) {
                 cars = "8";
@@ -367,6 +370,7 @@
 
         localStorage.setItem("bracket_storage_key", JSON.stringify(storageKey));
         localStorage.setItem("action", JSON.stringify(action));
+        localStorage.setItem("name", JSON.stringify(name));
 
         window.open(cars + "_car_bracket.html");
     }
@@ -375,6 +379,7 @@
         var cars = "1";
 
         if (num == 1) {
+            name = "Stock (100)";
             storageKey = 'stock100';
             if (people1.length <= 8) {
                 cars = "8";
@@ -387,6 +392,7 @@
             }
         }
         if (num == 2) {
+            name = "Super Stock (200)";
             storageKey = 'superStock200';
             if (people2.length <= 8) {
                 cars = "8";
@@ -399,6 +405,7 @@
             }
         }
         if (num == 3) {
+            name = "Masters (300)";
             storageKey = 'masters300';
             if (people3.length <= 8) {
                 cars = "8";
@@ -415,6 +422,7 @@
 
         localStorage.setItem("bracket_storage_key", JSON.stringify(storageKey));
         localStorage.setItem("action", JSON.stringify(action));
+        localStorage.setItem("name", JSON.stringify(name));
 
         window.open(cars + "_car_bracket.html");
     }

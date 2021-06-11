@@ -3,14 +3,14 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>8 Bracket Name (2021)</title>
+    <title id="title">8 Bracket Name (2021)</title>
 </head>
 <body>
     <div class="window">
 
         <div class="main-left">
             <div class="heading">
-                <span id="bracket-name">8-Bracket Name (2021)</span>
+                <span id="bracket-name">8 Bracket Name (2021)</span>
                 <div class="heading-spacer"></div>
                 <div class="legend-container">
                     <span class="legend" id="no-ticket-head">No Ticket</span>
@@ -1205,6 +1205,10 @@
     const storageKey = JSON.parse(localStorage.getItem('bracket_storage_key'));
     console.log(storageKey);
     const action = JSON.parse(localStorage.getItem('action'));
+
+    const name = JSON.parse(localStorage.getItem('name'));
+    document.getElementById('title').innerHTML = name;
+    document.getElementById('bracket-name').innerHTML = name;
 
     if (storageKey == "stock100") {
         fullNames = JSON.parse(localStorage.getItem('stock.fullNames'));
